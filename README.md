@@ -42,7 +42,7 @@ The current frontend is Svelte with custom CSS; it does not use React or Tailwin
 
 ## Deploy the frontend to Vercel
 
-The root `vercel.json` builds the Vite app in `frontend/` and publishes `frontend/dist`. Keep the Vercel project's Root Directory set to the repository root. The FastAPI backend is not part of this static deployment: it depends on a local Ollama service and Python computer-vision libraries, which are not included in this Vercel configuration.
+The root `vercel.json` builds the Vite app in `frontend/` and publishes `frontend/dist`. Keep the Vercel project's Root Directory set to the repository root. The install and build commands change into `frontend/` before running npm so `npm ci` finds the committed lockfile. The FastAPI backend is not part of this static deployment: it depends on a local Ollama service and Python computer-vision libraries, which are not included in this Vercel configuration.
 
 Add these build-time environment variables in the Vercel project settings:
 
