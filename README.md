@@ -40,6 +40,21 @@ XenDoc-Verify is a local-first demonstration of financial-document review that c
 
 The current frontend is Svelte with custom CSS; it does not use React or Tailwind CSS.
 
+## Deploy the frontend to Vercel
+
+The root `vercel.json` builds the Vite app in `frontend/` and publishes `frontend/dist`. Keep the Vercel project's Root Directory set to the repository root. The FastAPI backend is not part of this static deployment: it depends on a local Ollama service and Python computer-vision libraries, which are not included in this Vercel configuration.
+
+Add these build-time environment variables in the Vercel project settings:
+
+| Variable | Value | Purpose |
+|---|---|---|
+| `VITE_DEMO_MODE` | `true` | Run the UI with clearly labeled synthetic sample results without calling an API. Recommended for a portfolio demo. |
+| `VITE_API_URL` | Your publicly reachable API origin, e.g. `https://api.example.com` | Optional when using a separately hosted backend. Leave unset for frontend-only demo mode. |
+
+Redeploy after changing environment variables. Vite embeds `VITE_` variables into the browser bundle, so do not put secrets in them. When demo mode is off, the frontend automatically uses synthetic results if the API request cannot connect; HTTP/API errors are still shown normally. A separately hosted API must allow browser requests from the Vercel site's origin (CORS). `VITE_API_BASE_URL` remains supported as an alias for local setups; `VITE_API_URL` takes precedence.
+
+For local development, copy `frontend/.env.example` to `frontend/.env.local`; the Vite development proxy forwards `/api` to the configured API URL.
+
 ## Local setup
 
 ### Prerequisites
@@ -90,7 +105,7 @@ Copy-Item .env.example .env.local
 npm run dev
 ```
 
-Open the local URL printed by Vite (by default, `http://localhost:5173`). The frontend `.env.example` sets `VITE_API_BASE_URL=http://localhost:8000`; the Vite development proxy uses this value for `/api` requests.
+Open the local URL printed by Vite (by default, `http://localhost:5173`). The frontend `.env.example` sets `VITE_API_URL=http://localhost:8000`; the Vite development proxy uses this value for `/api` requests. Set `VITE_DEMO_MODE=true` to exercise the UI with synthetic responses and no API calls.
 
 To check and build the frontend:
 
@@ -111,7 +126,7 @@ npm run build
 - Keep identity documents, financial statements, uploads, environment files, and local development artifacts out of public commits. The root `.gitignore` excludes common local documents and build artifacts; review `git status` before committing.
 - Do not paste real personal or financial information into public issues, screenshots, sample data, or prompts to hosted services.
 - Ollama is configured for a local endpoint by default, but this prototype has no authentication or production-grade data-handling controls. Do not expose it or the API publicly with real documents.
-- Replace or remove the identity/financial demo text in the source before publishing; scan the complete Git staging area, not only the paths covered by `.gitignore`.
+- The included demo responses use synthetic values only. Keep real identity and financial documents out of the source, public issues, screenshots, and prompts; scan the complete Git staging area before publishing.
 
 ## License
 

@@ -203,6 +203,8 @@ textarea:disabled { opacity: .7; }
 .results-title h2 { margin: 0; color: #1d2b43; font: 700 18px/1.35 'Manrope', sans-serif; letter-spacing: -.4px; }
 .response-chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 9px; border: 1px solid #e0efe8; border-radius: 20px; color: #4e7868; background: #f7fcf9; font-size: 9px; font-weight: 600; }
 .response-chip .response-dot { width: 6px; height: 6px; box-shadow: 0 0 0 3px #e6f7f0; }
+.response-chip.demo { border-color: #f0dfb8; color: #80621f; background: #fffaf0; }
+.response-chip.demo .response-dot { background: #d39a2c; box-shadow: 0 0 0 3px #fbf0d7; }
 .recommendation-card { display: flex; align-items: center; gap: 13px; padding: 17px 19px; border: 1px solid #dce7f7; border-radius: 10px; background: linear-gradient(110deg, #f3f7ff, #fff 78%); }
 .recommendation-icon, .verdict-icon { display: grid; width: 39px; height: 39px; flex: 0 0 39px; place-items: center; border: 1px solid #cfe0fc; border-radius: 11px; color: #3971ce; background: #e9f1ff; font-size: 17px; font-weight: 700; }
 .recommendation-copy { min-width: 0; }

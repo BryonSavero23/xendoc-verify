@@ -403,10 +403,13 @@ Account Status: SAMPLE`;
         <section class="results-section" aria-live="polite" aria-label="Verification results">
           <div class="results-title">
             <div>
-              <p class="eyebrow">API RESPONSE</p>
+              <p class="eyebrow">{verificationResult.demo_mode ? 'DEMO RESPONSE' : 'API RESPONSE'}</p>
               <h2>Verification results</h2>
             </div>
-            <span class="response-chip"><span class="response-dot"></span> Results received</span>
+            <span class:demo={verificationResult.demo_mode} class="response-chip">
+              <span class="response-dot"></span>
+              {verificationResult.demo_mode ? 'Synthetic demo data' : 'Results received'}
+            </span>
           </div>
 
           <div class="recommendation-card">
@@ -446,7 +449,11 @@ Account Status: SAMPLE`;
                 <span class="section-tag">TIMING</span>
               </div>
               <div class="processing-number">{displayValue(verificationResult.processing_time_ms)}<span>ms</span></div>
-              <p class="small-muted">Reported by the verification API</p>
+              <p class="small-muted">
+                {verificationResult.demo_mode
+                  ? 'Illustrative sample only; this document was not analyzed.'
+                  : 'Reported by the verification API'}
+              </p>
               <div class="api-status-row">
                 <span>API status</span>
                 <span class:positive={statusTone(verificationResult.status) === 'positive'} class:negative={statusTone(verificationResult.status) === 'negative'} class:caution={statusTone(verificationResult.status) === 'caution'} class="status-badge compact">{displayValue(verificationResult.status)}</span>
@@ -495,8 +502,11 @@ Account Status: SAMPLE`;
       {:else if activeTab === 'image' && imageResult}
         <section class="results-section" aria-live="polite" aria-label="Image forensics results">
           <div class="results-title">
-            <div><p class="eyebrow">API RESPONSE</p><h2>Image forensics results</h2></div>
-            <span class="response-chip"><span class="response-dot"></span> Results received</span>
+            <div><p class="eyebrow">{imageResult.demo_mode ? 'DEMO RESPONSE' : 'API RESPONSE'}</p><h2>Image forensics results</h2></div>
+            <span class:demo={imageResult.demo_mode} class="response-chip">
+              <span class="response-dot"></span>
+              {imageResult.demo_mode ? 'Synthetic demo data' : 'Results received'}
+            </span>
           </div>
 
           <div class="forensics-verdict panel">
@@ -506,7 +516,11 @@ Account Status: SAMPLE`;
             <div class="verdict-copy">
               <span class="result-label">AUTHENTICITY VERDICT</span>
               <h3>{readableLabel(imageResult.authenticity_verdict)}</h3>
-              <p>Heuristic image checks are not a guarantee of authenticity. Review the image and signals in context.</p>
+              <p>
+                {imageResult.demo_mode
+                  ? 'Illustrative sample only; this image was not analyzed.'
+                  : 'Heuristic image checks are not a guarantee of authenticity. Review the image and signals in context.'}
+              </p>
             </div>
             <div class="resolution-block"><span>IMAGE RESOLUTION</span><strong>{imageResult.resolution}</strong></div>
           </div>
