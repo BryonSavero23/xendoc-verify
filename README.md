@@ -51,7 +51,7 @@ Add these build-time environment variables in the Vercel project settings:
 | `VITE_DEMO_MODE` | `true` | Run the UI with clearly labeled synthetic sample results without calling an API. Recommended for a portfolio demo. |
 | `VITE_API_URL` | Your publicly reachable API origin, e.g. `https://api.example.com` | Optional when using a separately hosted backend. Leave unset for frontend-only demo mode. |
 
-Redeploy after changing environment variables. Vite embeds `VITE_` variables into the browser bundle, so do not put secrets in them. When demo mode is off, the frontend automatically uses synthetic results if the API request cannot connect; HTTP/API errors are still shown normally. A separately hosted API must allow browser requests from the Vercel site's origin (CORS). `VITE_API_BASE_URL` remains supported as an alias for local setups; `VITE_API_URL` takes precedence.
+Redeploy after changing environment variables. Vite embeds `VITE_` variables into the browser bundle, so do not put secrets in them. When demo mode is off, the frontend automatically uses synthetic results if the API request cannot connect; HTTP/API errors are still shown normally. A separately hosted API must allow browser requests from the Vercel site's origin (CORS): set the backend's `FRONTEND_ORIGINS` environment variable to a comma-separated list of allowed origins, e.g. `https://your-project.vercel.app,http://localhost:5173` (defaults to the local Vite origins). `VITE_API_BASE_URL` remains supported as an alias for local setups; `VITE_API_URL` takes precedence.
 
 For local development, copy `frontend/.env.example` to `frontend/.env.local`; the Vite development proxy forwards `/api` to the configured API URL.
 
@@ -70,7 +70,7 @@ From the repository root, in PowerShell:
 ```powershell
 py -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
-.\.venv\Scripts\python.exe -m pip install fastapi "uvicorn[standard]" requests pydantic pypdf opencv-python numpy python-multipart
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
 ### 2. Start Ollama and pull the model
