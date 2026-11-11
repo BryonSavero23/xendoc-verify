@@ -1,10 +1,12 @@
 import json
+import os
 import re
 import time
 from typing import List, Optional
 import requests
 from fastapi import FastAPI, UploadFile, File, HTTPException
-from pydantic import BaseModel, Field
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field, field_validator
 from pypdf import PdfReader
 import io
 import cv2
@@ -14,6 +16,19 @@ app = FastAPI(
     title="XenDoc-Verify: AI KYC & Lending Document Pipeline",
     description="Automated identity & financial document extraction + deterministic fraud/compliance validation for e-KYC and Digital Lending workflows.",
     version="1.0.0"
+)
+
+# Browser origins allowed to call this API (comma-separated), e.g. the Vercel site.
+frontend_origins = os.getenv(
+    "FRONTEND_ORIGINS",
+    "http://localhost:5173,http://127.0.0.1:5173",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[origin.strip() for origin in frontend_origins.split(",") if origin.strip()],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 OLLAMA_MODEL = "llama3.2"
@@ -34,6 +49,17 @@ class ExtractedKYCData(BaseModel):
     monthly_commitments: float = 0.0
     net_income_stated: float = 0.0
     document_type: str = "Unknown"
+
+    # The LLM returns null for fields missing from the document; treat as 0.
+    @field_validator("gross_monthly_income", "monthly_commitments", "net_income_stated", mode="before")
+    @classmethod
+    def _null_amount_to_zero(cls, value):
+        return 0.0 if value is None else value
+
+    @field_validator("document_type", mode="before")
+    @classmethod
+    def _null_doc_type_to_unknown(cls, value):
+        return "Unknown" if value is None else value
 
 class VerificationResponse(BaseModel):
     status: str
