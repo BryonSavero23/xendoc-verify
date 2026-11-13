@@ -35,7 +35,11 @@ const configuredApiBaseUrl = (
   .trim()
   .replace(/\/+$/, '');
 const apiRequestBaseUrl = import.meta.env.DEV ? '' : configuredApiBaseUrl;
-const forceDemoMode = import.meta.env.VITE_DEMO_MODE?.trim().toLowerCase() === 'true';
+// A production build with no API URL has no backend to call: same-origin
+// requests would hit the static host and fail, so use demo mode instead.
+const forceDemoMode =
+  import.meta.env.VITE_DEMO_MODE?.trim().toLowerCase() === 'true' ||
+  (!import.meta.env.DEV && !configuredApiBaseUrl);
 
 export class ApiError extends Error {
   constructor(message: string) {
